@@ -24,7 +24,11 @@ mod build_settings;
 mod traits;
 mod build_system;
 mod dependency_parser;
+mod compile_system;
+mod compile_settings;
 
-pub use build_settings::{BuildSettings,SourceFileStrategy,BuildSettingsBuilder,Configuration,PathType};
+pub use build_settings::{BuildSettings,BuildSettingsBuilder,Configuration,PathType};
+pub use compile_settings::{CompileSettings,SourceFileStrategy,CompileSettingsBuilder};
 pub use build_system::BuildSystem;
+pub use compile_system::CompileSystem;
 pub use traits::{CompileStep,LinkStep};
