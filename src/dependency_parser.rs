@@ -40,13 +40,20 @@ fn parse(parse_me: &str) -> Vec<PathBuf> {
                 }
             }
             '\\' => {
-                escaped = true;
+                if !escaped {
+                    escaped = true;
+                }
+                else { // matching '\\'
+                    escaped = false;
+                    current_str.push('\\');
+                }
+
             }
             '\n' => {
                 escaped = false;
             }
             other => {
-                assert!(!escaped);
+                assert!(!escaped, "Unknown escape sequence \\{}",other);
                 current_str.push(other);
             }
         }
@@ -64,4 +71,8 @@ fn parse(parse_me: &str) -> Vec<PathBuf> {
     assert_eq!(deps[1],  PathBuf::from_str("/Users/drew/Code/winspike/metal-build/tests/example1.h").unwrap());
     assert_eq!(deps[2],  PathBuf::from_str("/Users/drew/Code/winspike/metal-build/tests/example 2.h").unwrap());
     assert_eq!(deps.len(), 3);
+}
+#[test] fn test_escaped() {
+    let txt = r"C:\\path\\file.spirv: C:\\path\\file.o";
+    let _ = parse(txt);
 }

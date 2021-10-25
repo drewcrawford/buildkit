@@ -1,4 +1,4 @@
-use crate::{CompileStep, CompileSettings};
+use crate::{CompileStep, CompileSettings, CompileSettingsBuilder, PathType};
 use std::marker::PhantomData;
 use std::path::{Path, PathBuf};
 use std::ffi::OsString;
@@ -16,7 +16,7 @@ pub struct CompileSystem<Compiler: CompileStep> {
 }
 
 impl<Compiler: CompileStep> CompileSystem<Compiler> {
-    pub(crate) fn compile_one(settings: &CompileSettings) -> Vec<PathBuf> {
+    pub(crate) fn compile_all(settings: &CompileSettings) -> Vec<PathBuf> {
         let source_files = settings.source_strategy.resolve::<Compiler>();
         if source_files.is_empty() { panic!("Nothing to compile!") }
         //todo: multithread this?
@@ -27,12 +27,31 @@ impl<Compiler: CompileStep> CompileSystem<Compiler> {
         dependency_path.push("dependency");
         let mut compile_results = Vec::new();
         for source_file in source_files {
-            let result = Compiler::compile_one(&source_file, &settings.intermediate_path,  &settings.configuration, &dependency_path);
+            let result = Compiler::compile_one(&source_file,&settings.intermediate_path,  &settings.configuration, &dependency_path);
             compile_results.push(result);
 
             super::dependency_parser::tell_cargo_about_dependencies(&dependency_path);
         }
         compile_results
+    }
+}
+
+impl<Compiler: CompileStep> CompileSystem<Compiler> {
+    ///Compiles using the settings specified.
+    ///
+    /// Returns a path to the final product.
+    pub fn build(settings: &CompileSettings) -> Vec<PathBuf> {
+        CompileSystem::<Compiler>::compile_all(&settings)
+    }
+
+    ///Build using no special settings.  Usually the entrypoint from `build.rs`
+    ///
+    /// `exe_path`: The path, relative to the built exe file, where the output should be located.
+    /// For example if your target is built in `target\debug\my.exe` and `exe_path` is `assets\product.dll`, the final location will be
+    /// `target\debug\assets\product.dll`.  The intermediate directories will be created if they do not already exist.
+    pub fn build_rs(exe_path: PathBuf) -> Vec<PathBuf> {
+        let settings = CompileSettingsBuilder::new().intermediate_path(PathType::EXERelative(exe_path)).finish();
+        Self::build(&settings)
     }
 }
 

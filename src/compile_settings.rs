@@ -41,7 +41,7 @@ pub struct CompileSettings {
 
 pub struct CompileSettingsBuilder {
     source_strategy: Option<SourceFileStrategy>,
-    intermediate_path: Option<PathBuf>,
+    intermediate_path: Option<PathType>,
     configuration: Option<Configuration>
 }
 
@@ -61,13 +61,13 @@ impl CompileSettingsBuilder {
         self.configuration = Some(configuration);
         self
     }
-    pub fn intermediate_path(&mut self, path: PathBuf) -> &mut Self {
+    pub fn intermediate_path(&mut self, path: PathType) -> &mut Self {
         self.intermediate_path = Some(path);
         self
     }
     pub(crate) fn _finish(&mut self, with_link: bool) -> CompileSettings {
         let intermediate_path = match &self.intermediate_path {
-            Some(path) => path.clone(),
+            Some(path) => path.path(),
             None => {
                 if with_link {
                     //compile is an intermediate step, find an intermediate dir
