@@ -3,7 +3,9 @@ use std::path::{Path, PathBuf};
 use crate::build_settings::Configuration;
 use std::ffi::{OsStr};
 
-///Implement this trait to bring in your compiler
+///Implement this trait to bring in your compiler.
+///
+/// A CompileStep compiles one sourcefile to one object file.
 pub trait CompileStep {
     ///The extension to scan for.  We will use this to create individual `CompileStep`.
     const SOURCE_FILE_EXTENSION: &'static str;

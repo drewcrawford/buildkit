@@ -30,7 +30,7 @@ impl BuildSettings {
 
 ///Builder pattern for [BuildSettings]
 ///
-/// https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+/// `https://doc.rust-lang.org/1.0.0/style/ownership/builders.html`
 #[derive(Clone)]
 pub struct BuildSettingsBuilder{
     compile_settings: Option<CompileSettings>,

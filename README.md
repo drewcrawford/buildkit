@@ -1,4 +1,3 @@
-/*!
 # buildkit
 
 The world's tiniest real buildsystem.  You might be looking for this crate if you are deciding whether to build some non-Rust
@@ -41,24 +40,8 @@ fn build_rs(exe_path: PathBuf) {
 }
 ```
 
-Implement [LinkStep] if your usecase involves linking multiple compile files into a single result.
+Implement `LinkStep` if your usecase involves linking multiple compile files into a single result.
 
 ## Use-side
 
-Call [CompileSystem::build_rs] from a `build.rs` file.  See documentation for additional entrypoints and options.
-
-
- */
-
-mod build_settings;
-mod traits;
-mod build_system;
-mod dependency_parser;
-mod compile_system;
-mod compile_settings;
-
-pub use build_settings::{BuildSettings,BuildSettingsBuilder,Configuration,PathType};
-pub use compile_settings::{CompileSettings,SourceFileStrategy,CompileSettingsBuilder};
-pub use build_system::BuildSystem;
-pub use compile_system::CompileSystem;
-pub use traits::{CompileStep,LinkStep,suggest_intermediate_file};
+Call `CompileSystem::build_rs` from a `build.rs` file.  See documentation for additional entrypoints and options.
