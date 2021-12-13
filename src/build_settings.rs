@@ -49,6 +49,10 @@ impl BuildSettingsBuilder {
         self.product_path = Some(path);
         self
     }
+    pub fn compile_settings(&mut self, settings: CompileSettings) -> &mut BuildSettingsBuilder {
+        self.compile_settings = Some(settings);
+        self
+    }
     pub fn finish(&self) -> BuildSettings {
         let compile_settings = match &self.compile_settings {
             //use 'link' version when part of `BuildSettings`

@@ -39,6 +39,7 @@ pub struct CompileSettings {
     pub(crate) configuration: Configuration,
 }
 
+#[derive(Clone)]
 pub struct CompileSettingsBuilder {
     source_strategy: Option<SourceFileStrategy>,
     intermediate_path: Option<PathType>,
