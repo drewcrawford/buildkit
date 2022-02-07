@@ -89,7 +89,18 @@ impl CompileSettingsBuilder {
         };
         let configuration = match self.configuration {
             Some(config) => config,
-            None => if std::env::var("DEBUG").expect("Must set DEBUG environment variable or call .configuration()") == "1" { Configuration::Debug } else { Configuration::Release }
+            None => {
+                let debug_var = std::env::var("DEBUG").expect("Must set DEBUG environment variable or call .configuration().  (DEBUG was not valid unicode.)");
+                if debug_var == "true" {
+                    Configuration::Debug
+                }
+                else if debug_var == "false" {
+                    Configuration::Release
+                }
+                else {
+                    panic!("Must set DEBUG environment variable or call .configuration().  (We saw DEBUG={})",debug_var);
+                }
+            }
         };
         CompileSettings {
             source_strategy,
