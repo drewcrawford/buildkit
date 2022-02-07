@@ -4,7 +4,7 @@ use std::str::FromStr;
 use crate::{CompileSettings};
 use crate::compile_settings::CompileSettingsBuilder;
 
-#[derive(Copy,Clone)]
+#[derive(Copy,Clone,Debug)]
 pub enum Configuration {
     Debug,
     Release
