@@ -8,22 +8,27 @@ use crate::compile_system::dir_walk;
 pub enum SourceFileStrategy {
     ///Use exactly the sourcefiles specified.
     SourceFiles(Vec<PathBuf>),
-    ///Search recursively in this path, starting from the manifest directory. e.g. payload like "src/"
+    ///Search recursively in these paths, starting from the manifest directory. e.g. payload like "src/"
     ///
     /// Note that if this path is absolute, we will search the absolute path instead.
-    SearchFromManifest(String)
+    SearchFromManifest(Vec<PathBuf>)
 }
 
 impl SourceFileStrategy {
     pub(crate) fn resolve<C: CompileStep>(&self) -> Vec<PathBuf> {
         match self {
             SourceFileStrategy::SourceFiles(paths) => paths.into_iter().map(|f| f.clone()).collect(),
-            SourceFileStrategy::SearchFromManifest(manifest_path) => {
+            SourceFileStrategy::SearchFromManifest(manifest_paths) => {
                 let manifest_string = std::env::var("CARGO_MANIFEST_DIR").unwrap();
-                let mut m_path = PathBuf::from_str(&manifest_string).unwrap();
-                m_path.push(manifest_path);
+                let m_path = PathBuf::from_str(&manifest_string).unwrap();
                 let mut vec = Vec::new();
-                dir_walk(&m_path, C::SOURCE_FILE_EXTENSION, &mut vec);
+
+                for path in manifest_paths {
+                    let mut new_path = m_path.clone();
+                    new_path.push(path);
+                    dir_walk(&m_path, C::SOURCE_FILE_EXTENSION, &mut vec);
+
+                }
                 vec
             }
         }
@@ -83,7 +88,7 @@ impl CompileSettingsBuilder {
         };
         let source_strategy = match &self.source_strategy {
             None => {
-                SourceFileStrategy::SearchFromManifest("src".to_owned())
+                SourceFileStrategy::SearchFromManifest(vec![PathBuf::from_str("src").unwrap()])
             }
             Some(strategy) => strategy.clone()
         };
