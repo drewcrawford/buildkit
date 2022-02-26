@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::{ PathBuf};
 use crate::{CompileStep, Configuration, PathType};
 use std::str::FromStr;
 use crate::compile_system::dir_walk;
@@ -26,8 +26,7 @@ impl SourceFileStrategy {
                 for path in manifest_paths {
                     let mut new_path = m_path.clone();
                     new_path.push(path);
-                    dir_walk(&m_path, C::SOURCE_FILE_EXTENSION, &mut vec);
-
+                    dir_walk(&new_path, C::SOURCE_FILE_EXTENSION, &mut vec);
                 }
                 vec
             }
@@ -117,4 +116,17 @@ impl CompileSettingsBuilder {
         //public version is non-link
         self._finish(false)
     }
+}
+
+#[test] fn source_walk() {
+    use std::path::Path;
+    struct YamlCompiler;
+    impl CompileStep for YamlCompiler {
+        const SOURCE_FILE_EXTENSION: &'static str = "yaml";
+        fn compile_one(_path: &Path, _intermediate_dir: &Path, _configuration: &Configuration, _dependency_path: &Path) -> PathBuf {
+            todo!()
+        }
+    }
+    let s = SourceFileStrategy::SearchFromManifest(vec![PathBuf::from_str("src").unwrap()]).resolve::<YamlCompiler>();
+    assert_eq!(s.len(), 0); //no yaml files in our build directory
 }
