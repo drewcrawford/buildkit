@@ -19,10 +19,11 @@ pub trait CompileStep {
     /// * `dependency_path`: Output file contining discovered dependencies.  If you know what sourcefiles
     ///    you consulted during the compile (including headers, etc.) write that info to this file.
     ///    For more information, see [this documentation](https://www.gnu.org/software/make/manual/html_node/Automatic-Prerequisites.html).
+    /// * `flags`: Compiler flags.
     /// # Returns
     /// * Returns a path to the compiled object file, should be located in the intermediate dir.
     ///
-    fn compile_one(path: &Path,intermediate_dir: &Path, configuration: &Configuration,dependency_path: &Path) -> PathBuf;
+    fn compile_one<'a>(path: &Path,intermediate_dir: &Path, configuration: &Configuration,dependency_path: &Path,flags: impl Iterator<Item=&'a String>) -> PathBuf;
 }
 
 ///Implement this trait to bring in your linker

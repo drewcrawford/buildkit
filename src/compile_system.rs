@@ -27,7 +27,7 @@ impl<Compiler: CompileStep> CompileSystem<Compiler> {
         dependency_path.push("dependency");
         let mut compile_results = Vec::new();
         for source_file in source_files {
-            let result = Compiler::compile_one(&source_file,&settings.intermediate_path,  &settings.configuration, &dependency_path);
+            let result = Compiler::compile_one(&source_file,&settings.intermediate_path,  &settings.configuration, &dependency_path,settings.flags.iter());
             compile_results.push(result);
 
             super::dependency_parser::tell_cargo_about_dependencies(&dependency_path);

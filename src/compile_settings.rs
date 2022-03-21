@@ -41,13 +41,16 @@ pub struct CompileSettings {
     pub(crate) intermediate_path: PathBuf,
     ///Whether debug/release
     pub(crate) configuration: Configuration,
+    ///Pass these flags to the compiler.
+    pub(crate) flags: Vec<String>,
 }
 
 #[derive(Clone)]
 pub struct CompileSettingsBuilder {
     source_strategy: Option<SourceFileStrategy>,
     intermediate_path: Option<PathType>,
-    configuration: Option<Configuration>
+    configuration: Option<Configuration>,
+    flags: Vec<String>,
 }
 
 impl CompileSettingsBuilder {
@@ -55,7 +58,8 @@ impl CompileSettingsBuilder {
         Self {
             source_strategy: None,
             intermediate_path: None,
-            configuration: None
+            configuration: None,
+            flags: Vec::new(),
         }
     }
     pub fn source_strategy(&mut self,strategy: SourceFileStrategy) -> &mut Self {
@@ -109,8 +113,14 @@ impl CompileSettingsBuilder {
         CompileSettings {
             source_strategy,
             intermediate_path,
-            configuration
+            configuration,
+            flags: self.flags.clone(),
         }
+    }
+    ///Set compiler flags.
+    pub fn set_flags(&mut self, flags: Vec<String>) -> &mut Self {
+        self.flags = flags;
+        self
     }
     pub fn finish(&mut self) -> CompileSettings {
         //public version is non-link
@@ -123,7 +133,7 @@ impl CompileSettingsBuilder {
     struct YamlCompiler;
     impl CompileStep for YamlCompiler {
         const SOURCE_FILE_EXTENSION: &'static str = "yaml";
-        fn compile_one(_path: &Path, _intermediate_dir: &Path, _configuration: &Configuration, _dependency_path: &Path) -> PathBuf {
+        fn compile_one<'a>(_path: &Path, _intermediate_dir: &Path, _configuration: &Configuration, _dependency_path: &Path, _flags: impl Iterator<Item=&'a String>) -> PathBuf {
             todo!()
         }
     }
