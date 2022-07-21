@@ -31,7 +31,7 @@ use std::path::{PathBuf,Path};
 struct MyCompiler;
 impl CompileStep for MyCompiler {
     const SOURCE_FILE_EXTENSION: &'static str = "mylang";
-    fn compile_one<'a>(path: &Path, intermediate_dir: &Path, configuration: &Configuration, dependency_path: &Path,flags: impl Iterator<Item=&'a String>) -> PathBuf {
+    fn compile_one<'a>(path: &Path, intermediate_dir: &Path, configuration: &Configuration, dependency_path: &Path,flags: impl Iterator<Item=&'a str>) -> PathBuf {
         //shell out to compiler here
         todo!()
     }

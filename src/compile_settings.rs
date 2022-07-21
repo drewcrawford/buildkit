@@ -133,7 +133,7 @@ impl CompileSettingsBuilder {
     struct YamlCompiler;
     impl CompileStep for YamlCompiler {
         const SOURCE_FILE_EXTENSION: &'static str = "yaml";
-        fn compile_one<'a>(_path: &Path, _intermediate_dir: &Path, _configuration: &Configuration, _dependency_path: &Path, _flags: impl Iterator<Item=&'a String>) -> PathBuf {
+        fn compile_one<'a>(_path: &Path, _intermediate_dir: &Path, _configuration: &Configuration, _dependency_path: &Path, _flags: impl Iterator<Item=&'a str>) -> PathBuf {
             todo!()
         }
     }

@@ -23,7 +23,7 @@ pub trait CompileStep {
     /// # Returns
     /// * Returns a path to the compiled object file, should be located in the intermediate dir.
     ///
-    fn compile_one<'a>(path: &Path,intermediate_dir: &Path, configuration: &Configuration,dependency_path: &Path,flags: impl Iterator<Item=&'a String>) -> PathBuf;
+    fn compile_one<'a>(path: &Path,intermediate_dir: &Path, configuration: &Configuration,dependency_path: &Path,flags: impl Iterator<Item=&'a str>) -> PathBuf;
 }
 
 ///Implement this trait to bring in your linker
