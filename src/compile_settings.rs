@@ -39,6 +39,13 @@ pub struct CompileSettings {
     pub(crate) source_strategy: SourceFileStrategy,
     ///Path for output/intermediates
     pub(crate) intermediate_path: PathBuf,
+    ///Path for products.
+    ///
+    /// Usually, (and by default), this is the intermediate directory.
+    /// However, if you are using a compile step with no link step, it might make
+    /// sense to send the object files to a products directory, away from any intermediates, which
+    /// may include the dependency file.
+    pub(crate) product_path: PathBuf,
     ///Whether debug/release
     pub(crate) configuration: Configuration,
     ///Pass these flags to the compiler.
@@ -50,6 +57,7 @@ pub struct CompileSettingsBuilder {
     source_strategy: Option<SourceFileStrategy>,
     intermediate_path: Option<PathType>,
     configuration: Option<Configuration>,
+    product_path: Option<PathType>,
     flags: Vec<String>,
 }
 
@@ -59,6 +67,7 @@ impl CompileSettingsBuilder {
             source_strategy: None,
             intermediate_path: None,
             configuration: None,
+            product_path: None,
             flags: Vec::new(),
         }
     }
@@ -72,6 +81,10 @@ impl CompileSettingsBuilder {
     }
     pub fn intermediate_path(&mut self, path: PathType) -> &mut Self {
         self.intermediate_path = Some(path);
+        self
+    }
+    pub fn product_path(&mut self, path: PathType) -> &mut Self {
+        self.product_path = Some(path);
         self
     }
     pub(crate) fn _finish(&mut self, with_link: bool) -> CompileSettings {
@@ -88,6 +101,10 @@ impl CompileSettingsBuilder {
                     PathType::EXERelative(PathBuf::new()).path().to_path_buf()
                 }
             }
+        };
+        let product_path = match &self.product_path {
+            Some(path) => path.path(),
+            None => intermediate_path.clone()
         };
         let source_strategy = match &self.source_strategy {
             None => {
@@ -114,6 +131,7 @@ impl CompileSettingsBuilder {
             source_strategy,
             intermediate_path,
             configuration,
+            product_path,
             flags: self.flags.clone(),
         }
     }

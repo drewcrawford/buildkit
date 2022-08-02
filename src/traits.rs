@@ -16,7 +16,7 @@ pub trait CompileStep {
     /// * `path`: Path to the source file
     /// * `intermediate_dir`: Output location for object files.  To get a path for storing your object file, consider calling `suggest_intermediate_file`.
     /// * `configuration`: Holds build settings
-    /// * `dependency_path`: Output file contining discovered dependencies.  If you know what sourcefiles
+    /// * `dependency_path`: Output file containing discovered dependencies.  If you know what sourcefiles
     ///    you consulted during the compile (including headers, etc.) write that info to this file.
     ///    For more information, see [this documentation](https://www.gnu.org/software/make/manual/html_node/Automatic-Prerequisites.html).
     /// * `flags`: Compiler flags.

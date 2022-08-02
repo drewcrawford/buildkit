@@ -28,7 +28,7 @@ impl<Compiler: CompileStep> CompileSystem<Compiler> {
         let mut compile_results = Vec::new();
         for source_file in source_files {
             let flags_iter = settings.flags.iter().map(|e| e as &str);
-            let result = Compiler::compile_one(&source_file,&settings.intermediate_path,  &settings.configuration, &dependency_path,flags_iter);
+            let result = Compiler::compile_one(&source_file,&settings.product_path,  &settings.configuration, &dependency_path,flags_iter);
             compile_results.push(result);
 
             super::dependency_parser::tell_cargo_about_dependencies(&dependency_path);
