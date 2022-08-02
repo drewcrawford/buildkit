@@ -23,6 +23,7 @@ impl<Compiler: CompileStep> CompileSystem<Compiler> {
         //todo: Incremental compiles?
         //create intermediate path if it does not exist
         create_dir_all(&settings.intermediate_path).unwrap();
+        create_dir_all(&settings.product_path).unwrap();
         let mut dependency_path = settings.intermediate_path.clone();
         dependency_path.push("dependency");
         let mut compile_results = Vec::new();
